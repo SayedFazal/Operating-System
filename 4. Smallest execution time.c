@@ -1,3 +1,4 @@
+'''Construct a scheduling program with C that selects the waiting process with the smallest execution time to execute next'''
 #include<stdio.h>
 int main()
 {
