@@ -1,19 +1,36 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>  
-#include<pthread.h>
-void *myThreadFun(void *vargp)
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+// Thread function
+DWORD WINAPI myThreadFun(LPVOID lpParam)
 {
-    sleep(1);
+    Sleep(1000); // Sleep for 1 second
     printf("Printing GeeksQuiz from Thread \n");
-    return NULL;
-} 
+    return 0;
+}
 int main()
 {
-    pthread_t thread_id;
+    HANDLE threadHandle;
+    DWORD threadId;
     printf("Before Thread\n");
-    pthread_create(&thread_id, NULL, myThreadFun, NULL);
-    pthread_join(thread_id, NULL);
+    // Create thread
+    threadHandle = CreateThread(
+        NULL,                  // Default security attributes
+        0,                     // Default stack size
+        myThreadFun,           // Thread function
+        NULL,                  // Parameter to thread function
+        0,                     // Default creation flags
+        &threadId);            // Pointer to store thread ID
+    // Check if thread creation succeeded
+    if (threadHandle == NULL)
+    {
+        printf("Thread creation failed.\n");
+        return 1;
+    }
+    // Wait for the thread to complete
+    WaitForSingleObject(threadHandle, INFINITE);
+    // Close the thread handle
+    CloseHandle(threadHandle);
     printf("After Thread\n");
-    exit(0);
+    return 0;
 }
